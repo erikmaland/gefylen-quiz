@@ -10,7 +10,7 @@ app.use(cors());
 app.use(express.json());
 
 // Routes
-app.get('/api/health', (req, res) => {
+app.get('/api/health', (_req, res) => {
   res.json({ status: 'ok' });
 });
 
@@ -83,14 +83,14 @@ app.post('/api/quiz', async (req, res) => {
       }))
     };
 
-    res.json(parsedQuiz);
+    return res.json(parsedQuiz);
   } catch (error) {
     console.error('Error creating quiz:', error);
-    res.status(500).json({ error: 'Failed to create quiz' });
+    return res.status(500).json({ error: 'Failed to create quiz' });
   }
 });
 
-app.get('/api/quiz', async (req, res) => {
+app.get('/api/quiz', async (_req, res) => {
   try {
     const quizzes = await prisma.quiz.findMany({
       include: {
@@ -111,10 +111,10 @@ app.get('/api/quiz', async (req, res) => {
       }))
     }));
 
-    res.json(parsedQuizzes);
+    return res.json(parsedQuizzes);
   } catch (error) {
     console.error('Error fetching quizzes:', error);
-    res.status(500).json({ error: 'Failed to fetch quizzes' });
+    return res.status(500).json({ error: 'Failed to fetch quizzes' });
   }
 });
 
@@ -146,10 +146,10 @@ app.get('/api/quiz/:id', async (req, res) => {
       }))
     };
 
-    res.json(parsedQuiz);
+    return res.json(parsedQuiz);
   } catch (error) {
     console.error('Error fetching quiz:', error);
-    res.status(500).json({ error: 'Failed to fetch quiz' });
+    return res.status(500).json({ error: 'Failed to fetch quiz' });
   }
 });
 
@@ -204,10 +204,10 @@ app.put('/api/quiz/:id', async (req, res) => {
       }))
     };
 
-    res.json(parsedQuiz);
+    return res.json(parsedQuiz);
   } catch (error) {
     console.error('Error updating quiz:', error);
-    res.status(500).json({ error: 'Failed to update quiz' });
+    return res.status(500).json({ error: 'Failed to update quiz' });
   }
 });
 
@@ -218,15 +218,15 @@ app.delete('/api/quiz/:id', async (req, res) => {
     await prisma.quiz.delete({
       where: { id }
     });
-    res.json({ message: 'Quiz deleted successfully' });
+    return res.json({ message: 'Quiz deleted successfully' });
   } catch (error) {
     console.error('Error deleting quiz:', error);
-    res.status(500).json({ error: 'Failed to delete quiz' });
+    return res.status(500).json({ error: 'Failed to delete quiz' });
   }
 });
 
 // Recipe endpoints
-app.get('/api/recipes', async (req, res) => {
+app.get('/api/recipes', async (_req, res) => {
   try {
     const recipes = await prisma.recipe.findMany();
     // Parse JSON strings back to arrays
@@ -235,10 +235,10 @@ app.get('/api/recipes', async (req, res) => {
       ingredients: JSON.parse(recipe.ingredients),
       steps: JSON.parse(recipe.steps)
     }));
-    res.json(parsedRecipes);
+    return res.json(parsedRecipes);
   } catch (error) {
     console.error('Error fetching recipes:', error);
-    res.status(500).json({ error: 'Failed to fetch recipes' });
+    return res.status(500).json({ error: 'Failed to fetch recipes' });
   }
 });
 
@@ -260,10 +260,10 @@ app.get('/api/recipes/:id', async (req, res) => {
       steps: JSON.parse(recipe.steps)
     };
 
-    res.json(parsedRecipe);
+    return res.json(parsedRecipe);
   } catch (error) {
     console.error('Error fetching recipe:', error);
-    res.status(500).json({ error: 'Failed to fetch recipe' });
+    return res.status(500).json({ error: 'Failed to fetch recipe' });
   }
 });
 
@@ -288,14 +288,14 @@ app.post('/api/recipes', async (req, res) => {
     });
 
     // Return parsed recipe
-    res.json({
+    return res.json({
       ...recipe,
       ingredients: JSON.parse(recipe.ingredients),
       steps: JSON.parse(recipe.steps)
     });
   } catch (error) {
     console.error('Error creating recipe:', error);
-    res.status(500).json({ error: 'Failed to create recipe' });
+    return res.status(500).json({ error: 'Failed to create recipe' });
   }
 });
 
@@ -322,14 +322,14 @@ app.put('/api/recipes/:id', async (req, res) => {
     });
 
     // Return parsed recipe
-    res.json({
+    return res.json({
       ...recipe,
       ingredients: JSON.parse(recipe.ingredients),
       steps: JSON.parse(recipe.steps)
     });
   } catch (error) {
     console.error('Error updating recipe:', error);
-    res.status(500).json({ error: 'Failed to update recipe' });
+    return res.status(500).json({ error: 'Failed to update recipe' });
   }
 });
 
@@ -339,10 +339,10 @@ app.delete('/api/recipes/:id', async (req, res) => {
     await prisma.recipe.delete({
       where: { id }
     });
-    res.json({ message: 'Recipe deleted successfully' });
+    return res.json({ message: 'Recipe deleted successfully' });
   } catch (error) {
     console.error('Error deleting recipe:', error);
-    res.status(500).json({ error: 'Failed to delete recipe' });
+    return res.status(500).json({ error: 'Failed to delete recipe' });
   }
 });
 
