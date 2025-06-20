@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background circle -->
+  <circle cx="16" cy="16" r="16" fill="#4F46E5"/>
+  
+  <!-- Stylized G -->
+  <path d="M22 10V8H19H17.5H16H14C11.2386 8 9 10.2386 9 13C9 15.7614 11.2386 18 14 18H19V15H14C12.8954 15 12 14.1046 12 13C12 11.8954 12.8954 11 14 11H16H17.5H19V13H16V15H19H22V13V10Z" fill="white"/>
+  
+  <!-- Decorative elements -->
+  <circle cx="14" cy="13" r="1.5" fill="#4F46E5"/>
+  <rect x="19" y="19" width="3" height="3" rx="1.5" fill="white"/>
+</svg> 
