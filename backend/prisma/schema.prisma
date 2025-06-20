@@ -1,0 +1,48 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model Question {
+  id            String   @id @default(uuid())
+  text          String
+  options       String   // JSON stringified array
+  correctAnswer Int
+  quiz          Quiz     @relation(fields: [quizId], references: [id], onDelete: Cascade)
+  quizId        String
+  order         Int      @default(0)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@index([quizId])
+}
+
+model Quiz {
+  id          String     @id @default(uuid())
+  title       String
+  description String
+  questions   Question[]
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+}
+
+model Recipe {
+  id              String   @id @default(uuid())
+  name            String
+  description     String
+  ingredients     String   // JSON stringified array
+  steps           String   // JSON stringified array
+  preparationTime String
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
