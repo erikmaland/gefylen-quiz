@@ -5,4 +5,3 @@ node_modules/
 npm-debug.log*
 
 /src/generated/prisma
-package-lock.json
