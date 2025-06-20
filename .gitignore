@@ -16,4 +16,7 @@ pnpm-debug.log*
 
 # Build output
 dist/
-build/ 
+build/
+
+# Package lock files
+package-lock.json 
