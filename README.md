@@ -102,7 +102,7 @@ This project is configured for easy deployment on Render with automatic database
      - **Name**: `gefylen-quiz-backend`
      - **Root Directory**: `backend`
      - **Environment**: `Node`
-     - **Build Command**: `npm install && npx prisma generate && npm run build`
+     - **Build Command**: `chmod +x build.sh && ./build.sh`
      - **Start Command**: `npm start`
 
 2. **Environment Variables**:
@@ -117,6 +117,20 @@ This project is configured for easy deployment on Render with automatic database
    - The `render.yaml` file handles the database connection
 
 4. **Deploy**: Click "Create Web Service"
+
+**Troubleshooting Backend Deployment**:
+- If you get "Cannot find module '/app/dist/server.js'" error:
+  1. Check the build logs in Render dashboard
+  2. Ensure the `build.sh` script is executable
+  3. Verify TypeScript compilation completed successfully
+  4. Check that Prisma client was generated
+  5. Ensure all dependencies are installed
+
+**Common Backend Issues**:
+- **Build failures**: Check Node.js version (18+ required)
+- **Prisma errors**: Ensure DATABASE_URL is set correctly
+- **Port conflicts**: Backend uses port 3000 on Render (not 5000)
+- **Missing dependencies**: Check that all dependencies are in package.json
 
 #### Step 2: Deploy Frontend
 
