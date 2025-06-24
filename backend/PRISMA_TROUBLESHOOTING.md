@@ -6,22 +6,28 @@ This is the most common Prisma error during deployment. Here's how to fix it:
 
 ## Quick Fixes
 
-### 1. Use Explicit Schema Path
-Update your build command to use explicit schema path:
-```bash
-Build Command: npm install && npx prisma generate --schema=./prisma/schema.prisma && npm run build
-```
-
-### 2. Use the Updated Build Script
-The `build.sh` script now includes explicit schema paths:
+### 1. Use the Updated Build Script (Recommended)
+The `build.sh` script now uses absolute paths:
 ```bash
 Build Command: chmod +x build.sh && ./build.sh
 ```
 
-### 3. Use the Simple Build Script
+### 2. Use the Simple Build Script
 If the main script fails, try the simple version:
 ```bash
 Build Command: chmod +x build-simple.sh && ./build-simple.sh
+```
+
+### 3. Use the Minimal Build Script
+For the most basic approach:
+```bash
+Build Command: chmod +x build-minimal.sh && ./build-minimal.sh
+```
+
+### 4. Use Explicit Schema Path
+Update your build command to use explicit schema path:
+```bash
+Build Command: npm install && npx prisma generate --schema=./prisma/schema.prisma && npm run build
 ```
 
 ## Root Causes and Solutions
@@ -30,7 +36,7 @@ Build Command: chmod +x build-simple.sh && ./build-simple.sh
 **Problem**: Build process runs from wrong directory
 **Solution**: 
 - Set Root Directory to `backend` in Render
-- Use absolute paths in build commands
+- Use absolute paths in build commands (now included in build scripts)
 
 ### Cause 2: File Permissions
 **Problem**: Build script not executable
@@ -65,8 +71,9 @@ backend/
 ├── src/
 │   └── server.ts             # REQUIRED: Main server
 ├── package.json              # REQUIRED: Dependencies
-├── build.sh                  # REQUIRED: Build script
-└── build-simple.sh           # OPTIONAL: Alternative build
+├── build.sh                  # REQUIRED: Main build script
+├── build-simple.sh           # OPTIONAL: Simple build script
+└── build-minimal.sh          # OPTIONAL: Minimal build script
 ```
 
 ## Schema File Content
@@ -114,27 +121,42 @@ Expected output:
 
 If all else fails, try these in order:
 
-### Option 1: Direct npm
+### Option 1: Updated main script (with absolute paths)
+```
+Build Command: chmod +x build.sh && ./build.sh
+```
+
+### Option 2: Simple build script (with absolute paths)
+```
+Build Command: chmod +x build-simple.sh && ./build-simple.sh
+```
+
+### Option 3: Minimal build script (no explicit paths)
+```
+Build Command: chmod +x build-minimal.sh && ./build-minimal.sh
+```
+
+### Option 4: Direct npm commands
 ```
 Build Command: npm install && npm run build
 ```
 
-### Option 2: Explicit Prisma
+### Option 5: Explicit Prisma commands
 ```
 Build Command: npm install && npx prisma generate --schema=./prisma/schema.prisma && npm run build
-```
-
-### Option 3: Step by step
-```
-Build Command: npm install && npx prisma generate --schema=./prisma/schema.prisma && npx tsc
 ```
 
 ## Common Error Messages
 
 ### "Could not find Prisma Schema"
-- Use explicit schema path
+- Use absolute paths (now in build scripts)
 - Check file exists in repository
 - Verify working directory
+
+### "Could not load `--schema` from provided path"
+- Use absolute paths (now in build scripts)
+- Check file permissions
+- Verify file exists
 
 ### "P1001: Can't reach database server"
 - Check DATABASE_URL format

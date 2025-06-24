@@ -52,17 +52,27 @@ The build script (`build.sh`) handles:
 
 If the main build script fails, try these alternatives in Render:
 
-#### Option 1: Simple build script
+#### Option 1: Updated main script (with absolute paths)
+```
+Build Command: chmod +x build.sh && ./build.sh
+```
+
+#### Option 2: Simple build script (with absolute paths)
 ```
 Build Command: chmod +x build-simple.sh && ./build-simple.sh
 ```
 
-#### Option 2: Direct npm commands
+#### Option 3: Minimal build script (no explicit paths)
+```
+Build Command: chmod +x build-minimal.sh && ./build-minimal.sh
+```
+
+#### Option 4: Direct npm commands
 ```
 Build Command: npm install && npm run build
 ```
 
-#### Option 3: Explicit Prisma commands
+#### Option 5: Explicit Prisma commands
 ```
 Build Command: npm install && npx prisma generate --schema=./prisma/schema.prisma && npm run build
 ```
