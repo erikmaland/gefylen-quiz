@@ -126,9 +126,15 @@ This project is configured for easy deployment on Render with automatic database
   4. Check that Prisma client was generated
   5. Ensure all dependencies are installed
 
+- If you get "Could not find Prisma Schema" error:
+  1. Ensure `prisma/schema.prisma` is configured for PostgreSQL
+  2. Check that `DATABASE_URL` environment variable is set
+  3. Verify the database is created in Render dashboard
+  4. Run `npx prisma generate` locally to test
+
 **Common Backend Issues**:
 - **Build failures**: Check Node.js version (18+ required)
-- **Prisma errors**: Ensure DATABASE_URL is set correctly
+- **Prisma errors**: Ensure DATABASE_URL is set correctly and schema is PostgreSQL
 - **Port conflicts**: Backend uses port 3000 on Render (not 5000)
 - **Missing dependencies**: Check that all dependencies are in package.json
 

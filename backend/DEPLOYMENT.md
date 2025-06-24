@@ -13,6 +13,54 @@
    - `DATABASE_URL` (auto-set by Render)
 4. **Deploy**: Click "Create Web Service"
 
+## Troubleshooting "Could not find Prisma Schema"
+
+This error occurs when Prisma can't locate the schema file or the database configuration is incorrect.
+
+### 1. Prisma Schema Configuration
+
+The schema file (`prisma/schema.prisma`) must be configured for PostgreSQL:
+
+```prisma
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+```
+
+### 2. Environment Variables
+
+Ensure `DATABASE_URL` is set correctly in Render:
+- Format: `postgresql://username:password@host:port/database`
+- Render automatically sets this when you create a PostgreSQL database
+
+### 3. Build Process
+
+The build script (`build.sh`) handles:
+1. **Install dependencies**: `npm install`
+2. **Generate Prisma client**: `npx prisma generate`
+3. **Run migrations**: `npx prisma migrate deploy`
+4. **Compile TypeScript**: `npm run build`
+5. **Verify build**: Check that all files exist
+
+### 4. Database Setup
+
+**For Render Deployment**:
+1. Create PostgreSQL database in Render dashboard
+2. The `DATABASE_URL` will be automatically set
+3. Migrations will run during build process
+
+**For Local Development**:
+```bash
+# Use SQLite for local development
+cp prisma/schema.sqlite.prisma prisma/schema.prisma
+npx prisma migrate dev
+```
+
 ## Troubleshooting "Cannot find module '/app/dist/server.js'"
 
 This error occurs when the build process fails to create the expected output file. Here's how to fix it:
@@ -142,8 +190,9 @@ If frontend can't connect to backend:
 The `build.sh` script performs these steps:
 1. **Install dependencies**: `npm install`
 2. **Generate Prisma client**: `npx prisma generate`
-3. **Compile TypeScript**: `npm run build`
-4. **Verify build**: Check that all required files exist
+3. **Run migrations**: `npx prisma migrate deploy`
+4. **Compile TypeScript**: `npm run build`
+5. **Verify build**: Check that all required files exist
 
 ## Alternative Build Commands
 
