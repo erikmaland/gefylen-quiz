@@ -6,25 +6,37 @@ This is the most common Prisma error during deployment. Here's how to fix it:
 
 ## Quick Fixes
 
-### 1. Use the Updated Build Script (Recommended)
+### 1. Use the Render-Specific Build Script (Recommended for Render)
+The `build-render.sh` script is specifically designed for Render deployment:
+```bash
+Build Command: chmod +x build-render.sh && ./build-render.sh
+```
+
+### 2. Use the NPM-Based Build Script
+If the render script fails, try the npm-based approach:
+```bash
+Build Command: chmod +x build-npm.sh && ./build-npm.sh
+```
+
+### 3. Use the Updated Build Script
 The `build.sh` script now uses absolute paths:
 ```bash
 Build Command: chmod +x build.sh && ./build.sh
 ```
 
-### 2. Use the Simple Build Script
+### 4. Use the Simple Build Script
 If the main script fails, try the simple version:
 ```bash
 Build Command: chmod +x build-simple.sh && ./build-simple.sh
 ```
 
-### 3. Use the Minimal Build Script
+### 5. Use the Minimal Build Script
 For the most basic approach:
 ```bash
 Build Command: chmod +x build-minimal.sh && ./build-minimal.sh
 ```
 
-### 4. Use Explicit Schema Path
+### 6. Use Explicit Schema Path
 Update your build command to use explicit schema path:
 ```bash
 Build Command: npm install && npx prisma generate --schema=./prisma/schema.prisma && npm run build
@@ -121,27 +133,37 @@ Expected output:
 
 If all else fails, try these in order:
 
-### Option 1: Updated main script (with absolute paths)
+### Option 1: Render-specific build script (Recommended for Render)
+```
+Build Command: chmod +x build-render.sh && ./build-render.sh
+```
+
+### Option 2: NPM-based build script
+```
+Build Command: chmod +x build-npm.sh && ./build-npm.sh
+```
+
+### Option 3: Updated main script (with absolute paths)
 ```
 Build Command: chmod +x build.sh && ./build.sh
 ```
 
-### Option 2: Simple build script (with absolute paths)
+### Option 4: Simple build script (with absolute paths)
 ```
 Build Command: chmod +x build-simple.sh && ./build-simple.sh
 ```
 
-### Option 3: Minimal build script (no explicit paths)
+### Option 5: Minimal build script (no explicit paths)
 ```
 Build Command: chmod +x build-minimal.sh && ./build-minimal.sh
 ```
 
-### Option 4: Direct npm commands
+### Option 6: Direct npm commands
 ```
 Build Command: npm install && npm run build
 ```
 
-### Option 5: Explicit Prisma commands
+### Option 7: Explicit Prisma commands
 ```
 Build Command: npm install && npx prisma generate --schema=./prisma/schema.prisma && npm run build
 ```
