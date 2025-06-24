@@ -13,7 +13,7 @@ export default function QuizPage({ params }: { params: Promise<{ id: string }> }
   const [quiz, setQuiz] = useState<Quiz | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [revealedAnswers, setRevealedAnswers] = useState<number[]>([]);
+  const [revealedAnswers, setRevealedAnswers] = useState<string[]>([]);
   const [showAllAnswers, setShowAllAnswers] = useState(false);
 
   useEffect(() => {
@@ -21,7 +21,7 @@ export default function QuizPage({ params }: { params: Promise<{ id: string }> }
       try {
         setIsLoading(true);
         setError(null);
-        const data = await getQuiz(parseInt(resolvedParams.id));
+        const data = await getQuiz(resolvedParams.id);
         setQuiz(data);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Failed to load quiz');
@@ -33,7 +33,7 @@ export default function QuizPage({ params }: { params: Promise<{ id: string }> }
     loadQuiz();
   }, [resolvedParams.id]);
 
-  const toggleAnswer = (questionId: number) => {
+  const toggleAnswer = (questionId: string) => {
     setRevealedAnswers(prev => 
       prev.includes(questionId)
         ? prev.filter(id => id !== questionId)
@@ -49,7 +49,7 @@ export default function QuizPage({ params }: { params: Promise<{ id: string }> }
     );
   };
 
-  const isAnswerRevealed = (questionId: number) => {
+  const isAnswerRevealed = (questionId: string) => {
     return revealedAnswers.includes(questionId) || showAllAnswers;
   };
 
@@ -137,7 +137,7 @@ export default function QuizPage({ params }: { params: Promise<{ id: string }> }
                 </h3>
                 {isAnswerRevealed(question.id) && (
                   <p className="mt-2 text-indigo-600 font-medium animate-fade-in">
-                    {question.answer}
+                    {question.options[question.correctAnswer]}
                   </p>
                 )}
               </div>

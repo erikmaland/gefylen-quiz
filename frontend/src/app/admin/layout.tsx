@@ -1,7 +1,5 @@
 'use client';
 
-import { Footer } from "@/components/Footer";
-
 export default function AdminLayout({
   children,
 }: {
@@ -10,7 +8,6 @@ export default function AdminLayout({
   return (
     <div className="flex flex-col min-h-screen">
       {children}
-      <Footer />
     </div>
   );
 } 

@@ -3,14 +3,15 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
+import { getRecipes, type Recipe } from "@/lib/api";
 
-interface Recipe {
-  id: number;
+interface MenuRecipe {
+  id: string;
   name: string;
 }
 
 export default function MenuPage() {
-  const [recipes, setRecipes] = useState<Recipe[]>([]);
+  const [recipes, setRecipes] = useState<MenuRecipe[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
@@ -20,10 +21,8 @@ export default function MenuPage() {
       try {
         setLoading(true);
         setError(null);
-        const res = await fetch("http://localhost:5000/api/recipes");
-        if (!res.ok) throw new Error("Kunne ikke hente oppskrifter");
-        const data = await res.json();
-        setRecipes(data.map((r: any) => ({ id: r.id, name: r.name })));
+        const data = await getRecipes();
+        setRecipes(data.map((r: Recipe) => ({ id: r.id, name: r.name })));
       } catch (err: any) {
         setError(err.message);
       } finally {
@@ -33,7 +32,7 @@ export default function MenuPage() {
     fetchRecipes();
   }, []);
 
-  const handleClick = (id: number) => {
+  const handleClick = (id: string) => {
     router.push(`/menu/${id}`);
   };
 

@@ -2,15 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
-
-interface Recipe {
-  id: number;
-  name: string;
-  description: string;
-  ingredients: string[];
-  steps: string[];
-  preparationTime: string;
-}
+import { getRecipe, type Recipe } from "@/lib/api";
 
 export default function RecipeDetailPage() {
   const params = useParams();
@@ -24,12 +16,8 @@ export default function RecipeDetailPage() {
       try {
         setLoading(true);
         setError(null);
-        const res = await fetch(`http://localhost:5000/api/recipes`);
-        if (!res.ok) throw new Error("Kunne ikke hente oppskrift");
-        const data = await res.json();
-        const found = data.find((r: any) => r.id === Number(id));
-        if (!found) throw new Error("Oppskrift ikke funnet");
-        setRecipe(found);
+        const data = await getRecipe(id as string);
+        setRecipe(data);
       } catch (err: any) {
         setError(err.message);
       } finally {

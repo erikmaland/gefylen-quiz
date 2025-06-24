@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter, useParams } from "next/navigation";
+import { getRecipe, updateRecipe, type Recipe } from "@/lib/api";
 
 export default function EditRecipePage() {
   const router = useRouter();
@@ -21,11 +22,7 @@ export default function EditRecipePage() {
       try {
         setLoading(true);
         setError(null);
-        const res = await fetch(`http://localhost:5000/api/recipes`);
-        if (!res.ok) throw new Error("Kunne ikke hente oppskrift");
-        const data = await res.json();
-        const recipe = data.find((r: any) => r.id === Number(id));
-        if (!recipe) throw new Error("Oppskrift ikke funnet");
+        const recipe = await getRecipe(id as string);
         setName(recipe.name);
         setDescription(recipe.description);
         setPreparationTime(recipe.preparationTime);
@@ -58,21 +55,13 @@ export default function EditRecipePage() {
     setError(null);
     setSuccess(false);
     try {
-      const res = await fetch(`http://localhost:5000/api/recipes/${id}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name,
-          description,
-          preparationTime,
-          ingredients: ingredients.filter((i) => i.trim() !== ""),
-          steps: steps.filter((s) => s.trim() !== ""),
-        }),
+      await updateRecipe(id as string, {
+        name,
+        description,
+        preparationTime,
+        ingredients: ingredients.filter((i) => i.trim() !== ""),
+        steps: steps.filter((s) => s.trim() !== ""),
       });
-      if (!res.ok) {
-        const data = await res.json();
-        throw new Error(data.error || "Noe gikk galt");
-      }
       setSuccess(true);
       // Optionally redirect or show a message
     } catch (err: any) {

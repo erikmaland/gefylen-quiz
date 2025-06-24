@@ -9,7 +9,7 @@ export function Footer() {
   return (
     <footer className="border-t bg-white mt-auto">
       <div className="max-w-4xl mx-auto py-8 px-4">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {/* Contact Info */}
           <div>
             <h3 className="text-sm font-semibold text-gray-900 uppercase tracking-wider">Kontakt</h3>

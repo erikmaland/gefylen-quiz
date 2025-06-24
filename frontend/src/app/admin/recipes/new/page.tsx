@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { createRecipe } from "@/lib/api";
 
 export default function NewRecipePage() {
   const router = useRouter();
@@ -32,21 +33,13 @@ export default function NewRecipePage() {
     setError(null);
     setSuccess(false);
     try {
-      const res = await fetch("http://localhost:5000/api/recipes", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name,
-          description,
-          preparationTime,
-          ingredients: ingredients.filter((i) => i.trim() !== ""),
-          steps: steps.filter((s) => s.trim() !== ""),
-        }),
+      await createRecipe({
+        name,
+        description,
+        preparationTime,
+        ingredients: ingredients.filter((i) => i.trim() !== ""),
+        steps: steps.filter((s) => s.trim() !== ""),
       });
-      if (!res.ok) {
-        const data = await res.json();
-        throw new Error(data.error || "Noe gikk galt");
-      }
       setSuccess(true);
       setName("");
       setDescription("");

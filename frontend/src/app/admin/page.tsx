@@ -101,6 +101,15 @@ export default function AdminPage() {
     }));
   };
 
+  const handleQuestionChange = (index: number, field: 'question' | 'answer', value: string) => {
+    setQuizForm(prev => ({
+      ...prev,
+      questions: prev.questions.map((q, i) => 
+        i === index ? { ...q, [field]: value } : q
+      )
+    }));
+  };
+
   const validateNewQuestion = () => {
     const questionErrors: FormErrors['newQuestion'] = {};
     
@@ -162,10 +171,19 @@ export default function AdminPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    console.log('Form submitted');
+    console.log('Quiz form data:', quizForm);
+    
+    if (!validateForm()) {
+      console.log('Form validation failed');
+      setTouched(prev => ({ ...prev, submit: true }));
+      return;
+    }
+    
     setIsSubmitting(true);
 
     try {
-      await createQuiz({
+      const quizData = {
         title: quizForm.title,
         description: quizForm.description,
         questions: quizForm.questions.map(q => ({
@@ -173,10 +191,16 @@ export default function AdminPage() {
           options: [q.answer],
           correctAnswer: 0,
         })),
-      });
+      };
+      
+      console.log('Sending quiz data to API:', quizData);
+      
+      await createQuiz(quizData);
 
+      console.log('Quiz created successfully, redirecting...');
       router.push('/quiz');
     } catch (err) {
+      console.error('Error creating quiz:', err);
       setErrors(prev => ({
         ...prev,
         submit: err instanceof Error ? err.message : 'Kunne ikke opprette quiz',
@@ -288,6 +312,49 @@ export default function AdminPage() {
         {/* Questions Section */}
         <div className="rounded-lg border bg-white p-6">
           <h2 className="text-xl font-semibold mb-4">Spørsmål</h2>
+          
+          {/* Add New Question Form */}
+          <div className="mb-6 p-4 border border-gray-200 rounded-lg bg-gray-50">
+            <h3 className="text-lg font-medium mb-4">Legg til nytt spørsmål</h3>
+            <div className="grid gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700">Spørsmål</label>
+                <input
+                  type="text"
+                  value={newQuestion.question}
+                  onChange={(e) => setNewQuestion(prev => ({ ...prev, question: e.target.value }))}
+                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                  placeholder="Skriv spørsmålet her..."
+                />
+                {errors.newQuestion?.question && (
+                  <p className="mt-1 text-sm text-red-600">{errors.newQuestion.question}</p>
+                )}
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700">Svar</label>
+                <input
+                  type="text"
+                  value={newQuestion.answer}
+                  onChange={(e) => setNewQuestion(prev => ({ ...prev, answer: e.target.value }))}
+                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                  placeholder="Skriv svaret her..."
+                />
+                {errors.newQuestion?.answer && (
+                  <p className="mt-1 text-sm text-red-600">{errors.newQuestion.answer}</p>
+                )}
+              </div>
+              <button
+                type="button"
+                onClick={handleAddQuestion}
+                className="flex items-center justify-center gap-2 bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+              >
+                <PlusIcon className="h-5 w-5" />
+                Legg til spørsmål
+              </button>
+            </div>
+          </div>
+
+          {/* Existing Questions List */}
           <div className="space-y-6">
             {quizForm.questions.map((q, index) => (
               <div key={index} className="flex items-start gap-4">
@@ -298,7 +365,7 @@ export default function AdminPage() {
                       type="text"
                       name={`questions.${index}.question`}
                       value={q.question}
-                      onChange={handleQuizChange}
+                      onChange={(e) => handleQuestionChange(index, 'question', e.target.value)}
                       className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
                       required
                     />
@@ -309,7 +376,7 @@ export default function AdminPage() {
                       type="text"
                       name={`questions.${index}.answer`}
                       value={q.answer}
-                      onChange={handleQuizChange}
+                      onChange={(e) => handleQuestionChange(index, 'answer', e.target.value)}
                       className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
                       required
                     />
@@ -325,14 +392,11 @@ export default function AdminPage() {
               </div>
             ))}
 
-            <button
-              type="button"
-              onClick={handleAddQuestion}
-              className="flex items-center gap-2 text-indigo-600 hover:text-indigo-800"
-            >
-              <PlusIcon className="h-5 w-5" />
-              Legg til spørsmål
-            </button>
+            {quizForm.questions.length === 0 && (
+              <div className="text-center py-8 text-gray-500">
+                <p>Ingen spørsmål lagt til ennå. Bruk skjemaet ovenfor for å legge til spørsmål.</p>
+              </div>
+            )}
           </div>
         </div>
 
@@ -340,7 +404,10 @@ export default function AdminPage() {
           {errors.submit && (
             <p className="text-sm text-red-600">{errors.submit}</p>
           )}
-          {Object.keys(errors).length > 0 && touched.submit && !errors.submit && (
+          {errors.questions && (
+            <p className="text-sm text-red-600">{errors.questions}</p>
+          )}
+          {Object.keys(errors).length > 0 && touched.submit && !errors.submit && !errors.questions && (
             <p className="text-sm text-red-600">Vennligst fiks alle feil før innsending</p>
           )}
           <button

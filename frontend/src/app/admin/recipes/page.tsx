@@ -3,13 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useAuth } from '@/lib/auth';
-
-interface Recipe {
-  id: number;
-  name: string;
-  description: string;
-  preparationTime: string;
-}
+import { getRecipes, type Recipe } from "@/lib/api";
 
 export default function AdminRecipesPage() {
   const { isAuthenticated } = useAuth();
@@ -23,9 +17,7 @@ export default function AdminRecipesPage() {
       try {
         setLoading(true);
         setError(null);
-        const res = await fetch("http://localhost:5000/api/recipes");
-        if (!res.ok) throw new Error("Kunne ikke hente oppskrifter");
-        const data = await res.json();
+        const data = await getRecipes();
         setRecipes(data);
       } catch (err: any) {
         setError(err.message);
