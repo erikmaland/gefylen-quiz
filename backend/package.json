@@ -5,13 +5,13 @@
   "main": "dist/server.js",
   "scripts": {
     "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
-    "build": "npx prisma generate && tsc",
-    "postinstall": "npx prisma generate",
+    "build": "npx prisma generate --schema=./prisma/schema.prisma && tsc",
+    "postinstall": "npx prisma generate --schema=./prisma/schema.prisma",
     "start": "node dist/server.js",
-    "db:generate": "npx prisma generate",
-    "db:migrate": "npx prisma migrate deploy",
-    "db:studio": "npx prisma studio",
-    "db:reset": "npx prisma migrate reset --force"
+    "db:generate": "npx prisma generate --schema=./prisma/schema.prisma",
+    "db:migrate": "npx prisma migrate deploy --schema=./prisma/schema.prisma",
+    "db:studio": "npx prisma studio --schema=./prisma/schema.prisma",
+    "db:reset": "npx prisma migrate reset --force --schema=./prisma/schema.prisma"
   },
   "keywords": [],
   "author": "",

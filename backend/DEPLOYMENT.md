@@ -42,12 +42,78 @@ Ensure `DATABASE_URL` is set correctly in Render:
 
 The build script (`build.sh`) handles:
 1. **Install dependencies**: `npm install`
-2. **Generate Prisma client**: `npx prisma generate`
-3. **Run migrations**: `npx prisma migrate deploy`
-4. **Compile TypeScript**: `npm run build`
-5. **Verify build**: Check that all files exist
+2. **Check schema exists**: Verify `prisma/schema.prisma` file exists
+3. **Generate Prisma client**: `npx prisma generate --schema=./prisma/schema.prisma`
+4. **Run migrations**: `npx prisma migrate deploy --schema=./prisma/schema.prisma`
+5. **Compile TypeScript**: `npm run build`
+6. **Verify build**: Check that all files exist
 
-### 4. Database Setup
+### 4. Alternative Build Commands
+
+If the main build script fails, try these alternatives in Render:
+
+#### Option 1: Simple build script
+```
+Build Command: chmod +x build-simple.sh && ./build-simple.sh
+```
+
+#### Option 2: Direct npm commands
+```
+Build Command: npm install && npm run build
+```
+
+#### Option 3: Explicit Prisma commands
+```
+Build Command: npm install && npx prisma generate --schema=./prisma/schema.prisma && npm run build
+```
+
+### 5. File Structure Verification
+
+Ensure your backend directory has this structure:
+```
+backend/
+├── prisma/
+│   ├── schema.prisma          # Main schema file
+│   ├── migrations/            # Migration files
+│   └── seed.ts               # Seed file
+├── src/
+│   └── server.ts             # Main server file
+├── package.json              # Dependencies
+├── build.sh                  # Build script
+└── build-simple.sh           # Alternative build script
+```
+
+### 6. Common Causes and Solutions
+
+#### **Schema file not found**
+```
+Error: Could not find Prisma Schema that is required for this command.
+```
+**Solutions**:
+1. Check that `prisma/schema.prisma` exists in your repository
+2. Use explicit schema path: `--schema=./prisma/schema.prisma`
+3. Verify file permissions on Render
+
+#### **Wrong working directory**
+```
+Error: Could not find Prisma Schema
+```
+**Solution**: Ensure build command runs from the `backend` directory:
+```bash
+# In Render, set Root Directory to: backend
+# Build Command: chmod +x build.sh && ./build.sh
+```
+
+#### **Environment variable issues**
+```
+Error: P1001: Can't reach database server
+```
+**Solution**: 
+1. Check that `DATABASE_URL` is set in Render environment variables
+2. Ensure PostgreSQL database is created in Render dashboard
+3. Verify the database URL format is correct
+
+### 7. Database Setup
 
 **For Render Deployment**:
 1. Create PostgreSQL database in Render dashboard
