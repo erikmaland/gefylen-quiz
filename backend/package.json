@@ -5,7 +5,7 @@
   "main": "dist/server.js",
   "scripts": {
     "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
-    "build": "npx prisma generate --schema=./prisma/schema.prisma && tsc",
+    "build": "npx prisma generate --schema=./prisma/schema.prisma && tsc --skipLibCheck",
     "postinstall": "npx prisma generate --schema=./prisma/schema.prisma",
     "start": "node dist/server.js",
     "db:generate": "npx prisma generate --schema=./prisma/schema.prisma",

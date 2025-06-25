@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-echo "=== Simple Inline Build (No Types Issue) ==="
+echo "=== NPX Build (Ensures TypeScript Available) ==="
 
 echo "Current directory: $(pwd)"
 
@@ -11,9 +11,9 @@ npm install
 echo "=== Generating Prisma client ==="
 npx prisma generate
 
-echo "=== Building with npm run build ==="
-# Use npm run build instead of calling tsc directly
-npm run build
+echo "=== Building with npx tsc ==="
+# Use npx to ensure TypeScript is available
+npx tsc --skipLibCheck
 
 echo "=== Build completed ==="
 ls -la dist/ 
