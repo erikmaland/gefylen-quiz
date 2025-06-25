@@ -18,6 +18,10 @@ ls -la
 echo "=== Installing dependencies ==="
 npm install
 
+echo "=== Ensuring Node.js types are available ==="
+# Ensure @types/node is installed and up to date
+npm install --save-dev @types/node@^20.11.19
+
 echo "=== Prisma Schema Location Check ==="
 # When root directory is 'backend', the schema should be at prisma/schema.prisma
 SCHEMA_PATH="prisma/schema.prisma"
